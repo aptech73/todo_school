@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="item"
+            type="dev.aptech.todoapp.ui.screen.todolist.model.ItemTodo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="12dp"
+        android:paddingTop="12dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <CheckBox
+            android:checked="@{item.finished}"
+            android:id="@+id/checkTodo"
+            android:layout_width="26dp"
+            android:layout_height="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/importanceTodo" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/importanceTodo"
+            itemImportance="@{item.importance}"
+            android:layout_width="16dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginStart="12dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/checkTodo" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:text="@{item.todoBody}"
+            style="@style/ToDoApp.Text.Body"
+            android:id="@+id/bodyTodo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:maxLines="3"
+            android:layout_marginTop="2dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginEnd="12dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/importanceTodo"
+            app:layout_constraintEnd_toStartOf="@id/infoTodo" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/ToDoApp.Text.Subhead"
+            itemSubhead="@{item.deadline}"
+            android:id="@+id/subheadTodo"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toStartOf="@id/bodyTodo"
+            app:layout_constraintTop_toBottomOf="@id/bodyTodo" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/infoTodo"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            app:srcCompat="@drawable/ic_info_24"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/bodyTodo"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
