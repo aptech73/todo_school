@@ -39,6 +39,18 @@ class TodoListViewModel @Inject constructor(
         visibilityInternal.value = visibilityInternal.value?.not()
     }
 
+    fun removeTodo(id: String) {
+        viewModelScope.launch {
+            todoItemsRepository.deleteItemById(id)
+        }
+    }
+
+    fun setFinishedTodo(id: String, isFinished: Boolean) {
+        viewModelScope.launch {
+            todoItemsRepository.updateFinished(id, isFinished)
+        }
+    }
+
     private fun mapToItems(items: List<TodoItem>) = items.run {
         map { (it as TodoItemImpl).mapToView() }
     }

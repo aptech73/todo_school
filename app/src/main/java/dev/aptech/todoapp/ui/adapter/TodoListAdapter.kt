@@ -14,11 +14,16 @@ import dev.aptech.todoapp.generated.callback.OnClickListener
 import dev.aptech.todoapp.ui.screen.todolist.model.ItemTodo
 
 class TodoListAdapter(
-    private val clickListener: OnItemClickListener
+    private val clickListener: OnItemClickListener,
+    private val checkBoxClickListener: OnCheckBoxClickListener
 ): ListAdapter<ItemTodo, TodoListAdapter.TodoListViewHolder>(TodoListDiffCallback) {
 
     interface OnItemClickListener {
         fun onItemClick(item: ItemTodo)
+    }
+
+    interface OnCheckBoxClickListener {
+        fun onCheckBoxClick(id: String, isChecked: Boolean)
     }
 
     inner class TodoListViewHolder(
@@ -28,6 +33,9 @@ class TodoListAdapter(
             binding.item = item
             binding.root.setOnClickListener {
                 clickListener.onItemClick(item)
+            }
+            binding.checkTodo.setOnClickListener {
+                checkBoxClickListener.onCheckBoxClick(item.id, binding.checkTodo.isChecked)
             }
         }
     }

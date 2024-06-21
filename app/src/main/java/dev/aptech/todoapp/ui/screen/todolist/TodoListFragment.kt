@@ -11,15 +11,20 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import dev.aptech.todoapp.R
 import dev.aptech.todoapp.databinding.FragmentTodolistBinding
 import dev.aptech.todoapp.domain.model.TodoItem
 import dev.aptech.todoapp.ui.adapter.TodoListAdapter
 import dev.aptech.todoapp.ui.screen.todolist.model.ItemTodo
+import dev.aptech.todoapp.util.SwipeToDeleteCallback
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+private const val TAG = "TodoListFragment"
 
 private const val EMPTY = ""
 
@@ -42,6 +47,10 @@ class TodoListFragment: DaggerFragment(R.layout.fragment_todolist) {
                 val direction = TodoListFragmentDirections.actionTodoListFragmentToTodoEditFragment(item.id)
                 findNavController().navigate(direction)
             }
+        }, object : TodoListAdapter.OnCheckBoxClickListener {
+            override fun onCheckBoxClick(id: String, isChecked: Boolean) {
+                viewModel.setFinishedTodo(id, isChecked)
+            }
         })
     }
 
@@ -55,14 +64,29 @@ class TodoListFragment: DaggerFragment(R.layout.fragment_todolist) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                Log.d(TAG, "[SwipeToDeleteCallback] direction: $direction, viewHolder: $viewHolder")
+                if (direction == 4) {
+                    viewModel.removeTodo(adapter.currentList[viewHolder.adapterPosition].id)
+                } else if (direction == 8) {
+                    viewModel.setFinishedTodo(adapter.currentList[viewHolder.adapterPosition].id, true)
+                }
+            }
+        }
+
         binding.apply {
             todoList.layoutManager = LinearLayoutManager(requireContext())
             todoList.adapter = adapter
+
+            ItemTouchHelper(swipeHandler).attachToRecyclerView(todoList)
 
             addTodo.setOnClickListener {
                 val direction = TodoListFragmentDirections.actionTodoListFragmentToTodoEditFragment(EMPTY)
                 findNavController().navigate(direction)
             }
+
+
         }
 
         observeTodoItems()
