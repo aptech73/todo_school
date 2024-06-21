@@ -2,12 +2,14 @@ package dev.aptech.todoapp.ui.screen.todolist
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import dev.aptech.todoapp.domain.model.TodoItem
 import dev.aptech.todoapp.domain.model.TodoItemImpl
 import dev.aptech.todoapp.domain.repository.TodoItemsRepository
 import dev.aptech.todoapp.ui.screen.todolist.model.ItemTodo
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,8 +31,12 @@ class TodoListViewModel @Inject constructor(
         viewModelScope.launch {
             todoItemsRepository.getTodoItems()
                 .catch {  }
+                .combine (visibility.asFlow()) { items, visibility ->
+                    Pair(items, visibility)
+                }
                 .collect {
-                    itemsInternal.value = mapToItems(it)
+                    if (it.second) itemsInternal.value = mapToItems(it.first)
+                    else itemsInternal.value = mapToItems(it.first).filter { !it.isFinished }
                 }
         }
     }

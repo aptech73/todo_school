@@ -95,6 +95,8 @@ class TodoListFragment: DaggerFragment(R.layout.fragment_todolist) {
 
     private fun observeTodoItems() {
         viewModel.items.observe(viewLifecycleOwner) {
+            val count = it.count { itemTodo -> itemTodo.isFinished }
+            binding.todoDoneCount.text = "Выполнено - $count"
             adapter.submitList(it)
         }
     }
