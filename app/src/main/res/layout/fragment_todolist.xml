@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="dev.aptech.todoapp.ui.screen.todolist.TodoListViewModel" />
+
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/back_primary">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="148dp"
+            android:fitsSystemWindows="true">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                app:expandedTitleMarginStart="60dp"
+                app:expandedTitleMarginBottom="28dp"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
+                app:expandedTitleTextAppearance="@style/ToDoApp.Text.LargeTitle"
+                android:background="@color/back_primary">
+
+                <androidx.appcompat.widget.Toolbar
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:title="Мои дела"
+                    android:background="@color/back_primary"
+                    android:elevation="10dp"
+                    app:titleTextAppearance="@style/ToDoApp.Text.Title"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/todoDoneCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:layout_gravity="bottom|start"
+                    android:text="Выполнено - 5"
+                    android:textAppearance="@style/ToDoApp.Text.Body"
+                    android:textColor="@color/label_tertiary"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/visibilityButton"
+                    android:layout_gravity="bottom|end"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:onClick="@{() -> viewModel.onVisibilityClick()}"
+                    app:srcCompat="@drawable/ic_visibility_24" />
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="16dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/todoList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addTodo"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_margin="16dp"
+            android:backgroundTint="@color/color_blue"
+            app:fabCustomSize="48dp"
+            app:srcCompat="@drawable/ic_add_24"
+            app:tint="@color/color_white"
+            android:layout_gravity="bottom|end"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>
