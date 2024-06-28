@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ToDo App</string>
+    <string name="toolbar_title">Мои дела</string>
+    <string name="empty_field">Пустое поле</string>
+    <string name="importance_normal">Нет</string>
+    <string name="importance_low">Низкий</string>
+    <string name="importance_high">Высокий</string>
 </resources>

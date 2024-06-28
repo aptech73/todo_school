@@ -1,6 +1,5 @@
 package dev.aptech.todoapp.data.repository
 
-import android.util.Log
 import dev.aptech.todoapp.domain.model.Importance
 import dev.aptech.todoapp.domain.model.TodoItem
 import dev.aptech.todoapp.domain.model.TodoItemEmpty
@@ -10,12 +9,11 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.util.Calendar
 import java.util.Date
-
-private const val TAG = "TodoItemsRepository"
+import javax.inject.Inject
 
 private const val INVALID_INDEX = -1
 
-class TodoItemsRepositoryImpl: TodoItemsRepository {
+class TodoItemsRepositoryImpl @Inject constructor(): TodoItemsRepository {
 
     private var todos = MutableStateFlow ( listOf(
             TodoItemImpl("1", "Купить что-то adlaskdlmaalwdmklawmlkawmdlkawmadawawdadw", Importance.NORMAL, isFinished = false, createDate = Date()),
@@ -51,7 +49,6 @@ class TodoItemsRepositoryImpl: TodoItemsRepository {
     }
 
     override suspend fun deleteItemById(id: String) {
-        Log.d(TAG, "[deleteItemById] todoId: $id")
         val index = todos.value.indexOfFirst { it.id == id }
         when (index) {
             INVALID_INDEX -> {}
@@ -60,7 +57,6 @@ class TodoItemsRepositoryImpl: TodoItemsRepository {
     }
 
     override suspend fun insertItem(todo: TodoItemImpl) {
-        Log.d(TAG, "[insertItem] todo: $todo")
         val index = todos.value.indexOfFirst { it.id == todo.id }
         when (index) {
             INVALID_INDEX -> todos.value += todo
@@ -69,7 +65,6 @@ class TodoItemsRepositoryImpl: TodoItemsRepository {
     }
 
     override suspend fun updateFinished(id: String, isFinished: Boolean) {
-        Log.d(TAG, "[updateFinished] todoId: $id")
         val index = todos.value.indexOfFirst { it.id == id }
         when (index) {
             INVALID_INDEX -> {  }

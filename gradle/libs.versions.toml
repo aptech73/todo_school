@@ -11,17 +11,28 @@ activity = "1.8.0"
 constraintlayout = "2.1.4"
 navigationFragmentKtx = "2.7.7"
 navigationUiKtx = "2.7.7"
-daggerVersion = "2.51.1"
-lifecycleVersion = "2.8.2"
+
+hiltVersion = "2.50"
+
+androidx-compose-viewmodel = "2.8.2"
+androidx-compose-activity = "1.9.0"
+androidx-compose-navigation = "2.7.7"
+androidx-compose-material3 = "1.2.1"
+composeVersion = "1.6.8"
 
 [libraries]
-dagger-dagger = { group = "com.google.dagger", name = "dagger", version.ref = "daggerVersion" }
-dagger-complier = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "daggerVersion" }
-dagger-android = { module = "com.google.dagger:dagger-android", version.ref = "daggerVersion" }
-dagger-processor = { module = "com.google.dagger:dagger-android-processor", version.ref = "daggerVersion" }
-dagger-android-support = { module = "com.google.dagger:dagger-android-support", version.ref = "daggerVersion" }
 
-androidx-lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata", version.ref = "lifecycleVersion" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltVersion" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltVersion" }
+
+androidx-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "composeVersion" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "androidx-compose-material3" }
+androidx-compose-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-compose-viewmodel" }
+androidx-compose-runtime = { group = "androidx.compose.runtime", name = "runtime-android", version.ref = "composeVersion" }
+androidx-compose-activity = { module = "androidx.activity:activity-compose", version.ref = "androidx-compose-activity" }
+androidx-compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-compose-navigation" }
+androidx-compose-tooling = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "composeVersion" }
+androidx-compose-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-compose-viewmodel" }
 
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -33,11 +44,11 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
-
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 navigation-safeargs = { id = "androidx.navigation.safeargs", version.ref = "navigationFragmentKtx" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hiltVersion" }
 
 

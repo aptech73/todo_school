@@ -1,12 +1,11 @@
 package dev.aptech.todoapp.ui.screen.todoedit.binding
 
-import android.util.Log
 import android.view.View
-import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.databinding.BindingAdapter
 import com.google.android.material.textfield.TextInputLayout
+import dev.aptech.todoapp.R
 import dev.aptech.todoapp.domain.model.Importance
 import dev.aptech.todoapp.ui.screen.todoedit.validation.Validation
 import dev.aptech.todoapp.ui.screen.todoedit.validation.ValidationEmpty
@@ -21,7 +20,7 @@ private val dateFormatter = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()
 fun setTodoBodyValidation(inputLayout: TextInputLayout, validation: Validation) {
     inputLayout.apply {
         error = when (validation) {
-            is ValidationEmpty -> "Пустое поле"
+            is ValidationEmpty -> context.getString(R.string.empty_field)
             else -> EMPTY_STRING
         }
     }
@@ -50,9 +49,9 @@ fun setDeadlineText(view: TextView, deadline: Date?) {
 fun setTextImportance(view: TextView, importance: Importance?) {
     if (importance != null){
         view.text = when (importance) {
-            Importance.NORMAL -> "Нет"
-            Importance.LOW -> "Низкий"
-            Importance.HIGH -> "Высокий"
+            Importance.NORMAL -> view.context.getString(R.string.importance_normal)
+            Importance.LOW -> view.context.getString(R.string.importance_low)
+            Importance.HIGH -> view.context.getString(R.string.importance_high)
         }
     }
 }
