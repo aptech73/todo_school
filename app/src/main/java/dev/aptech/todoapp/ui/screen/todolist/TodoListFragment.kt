@@ -1,114 +1,133 @@
 package dev.aptech.todoapp.ui.screen.todolist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import dagger.android.support.DaggerFragment
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.unit.dp
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.findNavController
 import dev.aptech.todoapp.R
 import dev.aptech.todoapp.databinding.FragmentTodolistBinding
-import dev.aptech.todoapp.domain.model.TodoItem
-import dev.aptech.todoapp.ui.adapter.TodoListAdapter
-import dev.aptech.todoapp.ui.screen.todolist.model.ItemTodo
-import dev.aptech.todoapp.util.SwipeToDeleteCallback
-import kotlinx.coroutines.launch
-import javax.inject.Inject
-
-private const val TAG = "TodoListFragment"
+import dev.aptech.todoapp.ui.apptheme.AppTheme
+import dev.aptech.todoapp.ui.apptheme.ToDoTheme
+import dev.aptech.todoapp.ui.component.ToDoAppBar
+import dev.aptech.todoapp.ui.component.ToDoListItem
 
 private const val EMPTY = ""
 
-class TodoListFragment: DaggerFragment(R.layout.fragment_todolist) {
+class TodoListFragment : Fragment(R.layout.fragment_todolist) {
 
     private lateinit var binding: FragmentTodolistBinding
-    private lateinit var adapter: TodoListAdapter
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[TodoListViewModel::class.java]
-    }
+    private val viewModel: TodoListViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        adapter = TodoListAdapter(object : TodoListAdapter.OnItemClickListener {
-            override fun onItemClick(item: ItemTodo) {
-                val direction = TodoListFragmentDirections.actionTodoListFragmentToTodoEditFragment(item.id)
-                findNavController().navigate(direction)
-            }
-        }, object : TodoListAdapter.OnCheckBoxClickListener {
-            override fun onCheckBoxClick(id: String, isChecked: Boolean) {
-                viewModel.setFinishedTodo(id, isChecked)
-            }
-        })
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    @OptIn(ExperimentalMaterial3Api::class)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = FragmentTodolistBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewModel = viewModel
-        return binding.root
-    }
+        val view = binding.root
+        binding.todoListLayout.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnLifecycleDestroyed(viewLifecycleOwner))
+            setContent {
+                AppTheme {
+                    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(
+                        rememberTopAppBarState()
+                    )
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+                    val todoList by viewModel.items.collectAsStateWithLifecycle(viewLifecycleOwner)
+                    val isVisibleAll by viewModel.visibility.collectAsState()
 
-        val swipeHandler = object : SwipeToDeleteCallback(requireContext()) {
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                Log.d(TAG, "[SwipeToDeleteCallback] direction: $direction, viewHolder: $viewHolder")
-                if (direction == 4) {
-                    viewModel.removeTodo(adapter.currentList[viewHolder.adapterPosition].id)
-                } else if (direction == 8) {
-                    viewModel.setFinishedTodo(adapter.currentList[viewHolder.adapterPosition].id, true)
+                    Scaffold(
+                        topBar = {
+                            ToDoAppBar(
+                                scrollBehavior = scrollBehavior,
+                                onVisibleClick = {
+                                    viewModel.onVisibilityClick()
+                                },
+                                isVisibleAll = isVisibleAll
+                            )
+                        },
+                        floatingActionButton = {
+                            FloatingActionButton(
+                                onClick = {
+                                    val direction =
+                                        TodoListFragmentDirections.actionTodoListFragmentToTodoEditFragment(
+                                            EMPTY
+                                        )
+                                    findNavController().navigate(direction)
+                                },
+                                containerColor = ToDoTheme.colors.colorBlue,
+                                contentColor = ToDoTheme.colors.colorWhite,
+                                shape = CircleShape
+                            ) {
+                                Icon(Icons.Filled.Add, contentDescription = null)
+                            }
+                        },
+                        modifier = Modifier
+                            .background(ToDoTheme.colors.backPrimary)
+                            .nestedScroll(scrollBehavior.nestedScrollConnection)
+                    ) { padding ->
+
+                        ElevatedCard(
+                            elevation = CardDefaults.cardElevation(
+                                defaultElevation = 6.dp
+                            ),
+                            colors = CardDefaults.cardColors(
+                                contentColor = ToDoTheme.colors.backSecondary
+                            ),
+                            modifier = Modifier
+                                .padding(top = ToDoTheme.shape.paddingSmall)
+                                .padding(ToDoTheme.shape.paddingSmall)
+                                .padding(padding)
+                        ) {
+                            LazyColumn {
+                                items(todoList) { currentItem ->
+                                    ToDoListItem(
+                                        todoItem = currentItem,
+                                        onCheckboxClick = { todoId, isFinished ->
+                                            viewModel.setFinishedTodo(
+                                                todoId, isFinished
+                                            )
+                                        },
+                                        onItemClick = { todoId ->
+                                            val direction =
+                                                TodoListFragmentDirections.actionTodoListFragmentToTodoEditFragment(todoId)
+                                            findNavController().navigate(direction)
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-
-        binding.apply {
-            todoList.layoutManager = LinearLayoutManager(requireContext())
-            todoList.adapter = adapter
-
-            ItemTouchHelper(swipeHandler).attachToRecyclerView(todoList)
-
-            addTodo.setOnClickListener {
-                val direction = TodoListFragmentDirections.actionTodoListFragmentToTodoEditFragment(EMPTY)
-                findNavController().navigate(direction)
-            }
-
-
-        }
-
-        observeTodoItems()
-        observeVisibility()
-    }
-
-    private fun observeTodoItems() {
-        viewModel.items.observe(viewLifecycleOwner) {
-            val count = it.count { itemTodo -> itemTodo.isFinished }
-            binding.todoDoneCount.text = "Выполнено - $count"
-            adapter.submitList(it)
-        }
-    }
-
-    private fun observeVisibility() {
-        viewModel.visibility.observe(viewLifecycleOwner) { visibility ->
-            binding.visibilityButton.apply {
-                when (visibility) {
-                    true -> setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_visibility_24))
-                    else -> setImageDrawable(AppCompatResources.getDrawable(requireContext(), R.drawable.ic_visibility_off_24))
-                }
-            }
-        }
+        return view
     }
 }

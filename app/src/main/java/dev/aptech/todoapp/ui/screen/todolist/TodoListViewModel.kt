@@ -1,27 +1,28 @@
 package dev.aptech.todoapp.ui.screen.todolist
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.aptech.todoapp.domain.model.TodoItem
 import dev.aptech.todoapp.domain.model.TodoItemImpl
 import dev.aptech.todoapp.domain.repository.TodoItemsRepository
-import dev.aptech.todoapp.ui.screen.todolist.model.ItemTodo
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class TodoListViewModel @Inject constructor(
     private val todoItemsRepository: TodoItemsRepository
 ): ViewModel() {
 
-    private val itemsInternal: MutableLiveData<List<ItemTodo>> = MutableLiveData()
-    val items = itemsInternal
+    private val itemsInternal =  MutableStateFlow<List<TodoItemImpl>>(emptyList())
+    val items = itemsInternal.asStateFlow()
 
-    private val visibilityInternal: MutableLiveData<Boolean> = MutableLiveData(true)
-    val visibility = visibilityInternal
+    private val visibilityInternal = MutableStateFlow(true)
+    val visibility = visibilityInternal.asStateFlow()
 
     init {
         observeTodoList()
@@ -31,7 +32,7 @@ class TodoListViewModel @Inject constructor(
         viewModelScope.launch {
             todoItemsRepository.getTodoItems()
                 .catch {  }
-                .combine (visibility.asFlow()) { items, visibility ->
+                .combine (visibility) { items, visibility ->
                     Pair(items, visibility)
                 }
                 .collect {
@@ -42,7 +43,7 @@ class TodoListViewModel @Inject constructor(
     }
 
     fun onVisibilityClick() {
-        visibilityInternal.value = visibilityInternal.value?.not()
+        visibilityInternal.value = visibilityInternal.value.not()
     }
 
     fun removeTodo(id: String) {
@@ -58,14 +59,6 @@ class TodoListViewModel @Inject constructor(
     }
 
     private fun mapToItems(items: List<TodoItem>) = items.run {
-        map { (it as TodoItemImpl).mapToView() }
+        map { (it as TodoItemImpl) }
     }
-
-    private fun TodoItemImpl.mapToView() = ItemTodo(
-        id = id,
-        todoBody = body,
-        importance = importance,
-        isFinished = isFinished,
-        deadline = deadline
-    )
 }

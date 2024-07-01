@@ -1,40 +1,31 @@
 package dev.aptech.todoapp.ui.screen.todoedit
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.datepicker.MaterialDatePicker
-import dagger.android.support.DaggerFragment
 import dev.aptech.todoapp.R
 import dev.aptech.todoapp.databinding.FragmentTodoeditBinding
 import dev.aptech.todoapp.domain.model.Importance
 import dev.aptech.todoapp.ui.screen.todoedit.validation.ValidationFailed
-import dev.aptech.todoapp.ui.screen.todolist.TodoListViewModel
-import java.text.SimpleDateFormat
 import java.util.Date
-import java.util.Locale
-import javax.inject.Inject
 
 private const val TAG = "TodoEditFragment"
 
-class TodoEditFragment: DaggerFragment(R.layout.fragment_todoedit) {
+class TodoEditFragment: Fragment(R.layout.fragment_todoedit) {
 
     private val args: TodoEditFragmentArgs by navArgs()
 
     private lateinit var binding: FragmentTodoeditBinding
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-    private val viewModel by lazy {
-        ViewModelProvider(this, viewModelFactory)[TodoEditViewModel::class.java]
-    }
+    private val viewModel: TodoEditViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentTodoeditBinding.inflate(inflater, container, false)
@@ -104,7 +95,6 @@ class TodoEditFragment: DaggerFragment(R.layout.fragment_todoedit) {
                     picker.show(parentFragmentManager, TAG)
                 }
                 else -> {
-                    Log.d(TAG, "disableDeadline")
                     viewModel.disableDeadline()
                 }
             }

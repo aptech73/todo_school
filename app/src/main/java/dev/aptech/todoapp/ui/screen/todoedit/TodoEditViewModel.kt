@@ -1,10 +1,10 @@
 package dev.aptech.todoapp.ui.screen.todoedit
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.aptech.todoapp.domain.model.Importance
 import dev.aptech.todoapp.domain.model.TodoItemEmpty
 import dev.aptech.todoapp.domain.model.TodoItemImpl
@@ -19,10 +19,9 @@ import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 
-private const val TAG = "TodoEditViewModel"
-
 private const val EMPTY = ""
 
+@HiltViewModel
 class TodoEditViewModel @Inject constructor(
     private val todoItemsRepository: TodoItemsRepository
 ): ViewModel() {
@@ -80,7 +79,6 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun onTodoBodyChanged(newValue: CharSequence, start: Int, before: Int, count: Int) {
-        Log.d(TAG, "[onTodoBodyChanged] newValue: $newValue")
         val curValue = currentItemInternal.value
         newValue.toString().also {
             currentItemInternal.apply {
@@ -98,7 +96,6 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun onDeadlineClick() {
-        Log.d(TAG, "[onDeadlineClick] no args")
         onDeadLineCLick.postValue(Unit)
     }
 
