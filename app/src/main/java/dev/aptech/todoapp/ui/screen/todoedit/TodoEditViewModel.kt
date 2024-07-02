@@ -14,6 +14,8 @@ import dev.aptech.todoapp.ui.screen.todoedit.validation.Validation
 import dev.aptech.todoapp.ui.screen.todoedit.validation.ValidationEmpty
 import dev.aptech.todoapp.ui.screen.todoedit.validation.ValidationOk
 import dev.aptech.todoapp.util.SingleLiveEvent
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
@@ -26,8 +28,8 @@ class TodoEditViewModel @Inject constructor(
     private val todoItemsRepository: TodoItemsRepository
 ): ViewModel() {
 
-    private val currentItemInternal = MutableLiveData<ItemTodo>()
-    val currentItem: LiveData<ItemTodo> = currentItemInternal
+    private val currentItemInternal = MutableStateFlow<ItemTodo>(ItemTodo.default())
+    val currentItem = currentItemInternal.asStateFlow()
 
     private val todoBodyValidationInternal = MutableLiveData<Validation>().apply { value = ValidationOk }
     val todoBodyValidation: LiveData<Validation> = todoBodyValidationInternal
@@ -88,7 +90,7 @@ class TodoEditViewModel @Inject constructor(
                 }
                 value?.let { item ->
                     if (item.body != it) {
-                        value = curValue?.copy(body = it)
+                        value = curValue.copy(body = it)
                     }
                 }
             }

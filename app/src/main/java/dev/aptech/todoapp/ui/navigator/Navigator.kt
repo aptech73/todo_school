@@ -11,10 +11,12 @@ import dev.aptech.todoapp.ui.screen.todolist.ToDoList
 
 private const val DESTINATION_LIST = "list"
 private const val DESTINATION_EDIT = "edit"
+private const val DESTINATION_EDIT_ARGS = "edit/{todoId}"
+
 
 private const val ARGUMENT_ID = "todoId"
 
-private const val EMPTY_ID = ""
+private const val EMPTY_ID = "new"
 
 @Composable
 fun NavHostController.InitNavigator() {
@@ -29,7 +31,7 @@ fun NavHostController.InitNavigator() {
             )
         }
         composable(
-            route = DESTINATION_EDIT,
+            route = DESTINATION_EDIT_ARGS,
             arguments = listOf(navArgument(ARGUMENT_ID) { type = NavType.StringType })
         ) {
             ToDoEdit(
@@ -41,7 +43,7 @@ fun NavHostController.InitNavigator() {
 }
 
 fun NavHostController.navigateToEdit(todoId: String) {
-    if (currentDestination?.route == DESTINATION_EDIT) {
+    if (currentDestination?.route == DESTINATION_EDIT_ARGS) {
         return
     }
     navigate("$DESTINATION_EDIT/$todoId")

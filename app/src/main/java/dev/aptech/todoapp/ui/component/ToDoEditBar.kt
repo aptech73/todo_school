@@ -38,6 +38,7 @@ fun ToDoEditBar(
         IconButton(onClick = { onCancelClick() }) {
             Icon(
                 imageVector = Icons.Default.Close,
+                tint = ToDoTheme.colors.labelPrimary,
                 contentDescription = null,
             )
         }

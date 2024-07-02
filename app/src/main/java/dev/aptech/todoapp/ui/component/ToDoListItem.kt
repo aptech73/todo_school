@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
@@ -35,6 +36,7 @@ fun ToDoListItem(
 ) {
     Row(
         modifier = modifier
+            .fillMaxWidth()
             .background(ToDoTheme.colors.backSecondary)
             .clickable { onItemClick(todoItem.id) },
         verticalAlignment = Alignment.Top
@@ -48,47 +50,44 @@ fun ToDoListItem(
                     else -> ToDoTheme.colors.supportSeparator
                 },
                 checkedColor = ToDoTheme.colors.colorGreen
-            )
+            ),
+            modifier = modifier
+                .padding(start = 16.dp)
         )
-        Row(
+        Column(
             modifier = Modifier
-                .padding(top = 12.dp, bottom = 12.dp)
+                .weight(1f)
+                .padding(start = 12.dp, end = 12.dp, top = 12.dp, bottom = 12.dp)
         ) {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .padding(end = 12.dp)
-            ) {
-                Text(
-                    text = todoItem.body,
-                    color = when (todoItem.isFinished) {
-                        false -> ToDoTheme.colors.labelPrimary
-                        else -> ToDoTheme.colors.labelTertiary
-                    },
-                    maxLines = 3,
-                    overflow = TextOverflow.Ellipsis,
-                    style = TextStyle(
-                        textDecoration = when (todoItem.isFinished) {
-                            true -> TextDecoration.LineThrough
-                            else -> TextDecoration.None
-                        }
-                    )
+            Text(
+                text = todoItem.body,
+                color = when (todoItem.isFinished) {
+                    false -> ToDoTheme.colors.labelPrimary
+                    else -> ToDoTheme.colors.labelTertiary
+                },
+                maxLines = 3,
+                overflow = TextOverflow.Ellipsis,
+                style = TextStyle(
+                    textDecoration = when (todoItem.isFinished) {
+                        true -> TextDecoration.LineThrough
+                        else -> TextDecoration.None
+                    }
                 )
-                todoItem.deadline?.let {
-                    Text(
-                        text = dateFormatter.format(todoItem.deadline),
-                        color = ToDoTheme.colors.labelTertiary,
-                        style = ToDoTheme.typography.subhead
-                    )
-                }
-            }
-            Icon(
-                imageVector = Icons.Outlined.Info,
-                contentDescription = null,
-                tint = ToDoTheme.colors.supportSeparator,
-                modifier = Modifier
-                    .padding(end = 12.dp)
             )
+            todoItem.deadline?.let {
+                Text(
+                    text = dateFormatter.format(todoItem.deadline),
+                    color = ToDoTheme.colors.labelTertiary,
+                    style = ToDoTheme.typography.subhead
+                )
+            }
         }
+        Icon(
+            imageVector = Icons.Outlined.Info,
+            contentDescription = null,
+            tint = ToDoTheme.colors.supportSeparator,
+            modifier = Modifier
+                .padding(end = 16.dp, top = 12.dp)
+        )
     }
 }

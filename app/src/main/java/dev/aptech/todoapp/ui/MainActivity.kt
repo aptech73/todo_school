@@ -5,9 +5,13 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.aptech.todoapp.databinding.ActivityMainBinding
+import dev.aptech.todoapp.ui.apptheme.AppTheme
+import dev.aptech.todoapp.ui.navigator.InitNavigator
 
 
 @AndroidEntryPoint
@@ -17,8 +21,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+//        binding = ActivityMainBinding.inflate(layoutInflater)
+//        setContentView(binding.root)
+
+        setContent {
+            AppTheme {
+                val navHostController = rememberNavController()
+                navHostController.InitNavigator()
+            }
+        }
     }
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {

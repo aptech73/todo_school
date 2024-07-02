@@ -33,7 +33,7 @@ import dev.aptech.todoapp.R
 import dev.aptech.todoapp.databinding.FragmentTodolistBinding
 import dev.aptech.todoapp.ui.apptheme.AppTheme
 import dev.aptech.todoapp.ui.apptheme.ToDoTheme
-import dev.aptech.todoapp.ui.component.ToDoAppBar
+import dev.aptech.todoapp.ui.component.ToDoListBar
 import dev.aptech.todoapp.ui.component.ToDoListItem
 
 private const val EMPTY = ""
@@ -65,7 +65,7 @@ class TodoListFragment : Fragment(R.layout.fragment_todolist) {
 
                     Scaffold(
                         topBar = {
-                            ToDoAppBar(
+                            ToDoListBar(
                                 scrollBehavior = scrollBehavior,
                                 onVisibleClick = {
                                     viewModel.onVisibilityClick()
