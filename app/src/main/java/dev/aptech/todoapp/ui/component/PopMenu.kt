@@ -1,11 +1,13 @@
 package dev.aptech.todoapp.ui.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,10 +23,11 @@ fun PopMenu(
     onMenuClick: () -> Unit,
     onDismissRequest: () -> Unit,
     onMenuItemClick: (Importance) -> Unit,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
+            .background(ToDoTheme.colors.backPrimary)
             .fillMaxWidth()
             .padding(ToDoTheme.shape.paddingMedium)
             .clickable { onMenuClick() }
@@ -48,6 +51,8 @@ fun PopMenu(
         )
         DropdownMenu(
             expanded = menuVisibility,
+            modifier = modifier
+                .background(ToDoTheme.colors.backElevated),
             onDismissRequest = { onDismissRequest() }) {
             DropdownMenuItem(
                 text = {
@@ -55,7 +60,10 @@ fun PopMenu(
                         text = stringResource(R.string.importance_low),
                         style = ToDoTheme.typography.body
                     ) },
-                onClick = { onMenuItemClick(Importance.LOW) }
+                onClick = { onMenuItemClick(Importance.LOW) },
+                colors = MenuDefaults.itemColors(
+                    textColor = ToDoTheme.colors.labelPrimary,
+                )
             )
             DropdownMenuItem(
                 text = {
@@ -63,7 +71,10 @@ fun PopMenu(
                         text = stringResource(R.string.importance_normal),
                         style = ToDoTheme.typography.body
                     ) },
-                onClick = { onMenuItemClick(Importance.NORMAL) }
+                onClick = { onMenuItemClick(Importance.NORMAL) },
+                colors = MenuDefaults.itemColors(
+                    textColor = ToDoTheme.colors.labelPrimary,
+                )
             )
             DropdownMenuItem(
                 text = {
@@ -71,7 +82,10 @@ fun PopMenu(
                         text = stringResource(R.string.importance_high),
                         style = ToDoTheme.typography.body
                     ) },
-                onClick = { onMenuItemClick(Importance.HIGH) }
+                onClick = { onMenuItemClick(Importance.HIGH) },
+                colors = MenuDefaults.itemColors(
+                    textColor = ToDoTheme.colors.colorRed,
+                )
             )
         }
     }

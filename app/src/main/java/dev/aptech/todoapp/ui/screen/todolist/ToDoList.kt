@@ -1,6 +1,5 @@
 package dev.aptech.todoapp.ui.screen.todolist
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -60,8 +59,8 @@ fun ToDoList(
                 Icon(Icons.Filled.Add, contentDescription = null)
             }
         },
+        containerColor = ToDoTheme.colors.backPrimary,
         modifier = modifier
-            .background(ToDoTheme.colors.backPrimary)
             .nestedScroll(scrollBehavior.nestedScrollConnection)
     ){ paddingValues ->
         ElevatedCard(

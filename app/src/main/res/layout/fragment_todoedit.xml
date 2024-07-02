@@ -77,7 +77,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textAlignment="viewStart"
-                            android:onTextChanged="@{viewModel::onTodoBodyChanged}"
                             android:text="@{viewModel.currentItem.body}"
                             android:hint="Что надо сделать ..." />
 

@@ -15,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -67,7 +66,7 @@ fun ToDoListItem(
                 },
                 maxLines = 3,
                 overflow = TextOverflow.Ellipsis,
-                style = TextStyle(
+                style = ToDoTheme.typography.body.copy(
                     textDecoration = when (todoItem.isFinished) {
                         true -> TextDecoration.LineThrough
                         else -> TextDecoration.None

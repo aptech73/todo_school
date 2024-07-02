@@ -21,8 +21,6 @@ import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 
-private const val EMPTY = ""
-
 @HiltViewModel
 class TodoEditViewModel @Inject constructor(
     private val todoItemsRepository: TodoItemsRepository
@@ -50,14 +48,14 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun saveTodo() {
-        val todoBody = currentItemInternal.value?.body?.trim() ?: EMPTY
+        val todoBody = currentItemInternal.value.body.trim()
 
         if (todoBody.isEmpty()) {
             todoBodyValidationInternal.value = ValidationEmpty
             return
         }
 
-        val todoItem = currentItemInternal.value?.run {
+        val todoItem = currentItemInternal.value.run {
             TodoItemImpl(
                 id = id,
                 body = todoBody,
@@ -67,7 +65,7 @@ class TodoEditViewModel @Inject constructor(
                 createDate = createDate,
                 changeDate = Calendar.getInstance().time
             )
-        } ?: return
+        }
 
         viewModelScope.launch {
             todoItemsRepository.insertItem(todoItem)
@@ -80,7 +78,7 @@ class TodoEditViewModel @Inject constructor(
         }
     }
 
-    fun onTodoBodyChanged(newValue: CharSequence, start: Int, before: Int, count: Int) {
+    fun onTodoBodyChanged(newValue: CharSequence) {
         val curValue = currentItemInternal.value
         newValue.toString().also {
             currentItemInternal.apply {
@@ -88,7 +86,7 @@ class TodoEditViewModel @Inject constructor(
                     true -> ValidationEmpty
                     else -> ValidationOk
                 }
-                value?.let { item ->
+                value.let { item ->
                     if (item.body != it) {
                         value = curValue.copy(body = it)
                     }
@@ -102,7 +100,7 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun disableDeadline() {
-        currentItemInternal.value?.run {
+        currentItemInternal.value.run {
             copy(
                 deadline = null
             ).let {
@@ -112,7 +110,7 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun enableDeadline(date: Date) {
-        currentItemInternal.value?.run {
+        currentItemInternal.value.run {
             copy(
                 deadline = date
             ).let {
@@ -122,7 +120,7 @@ class TodoEditViewModel @Inject constructor(
     }
 
     fun onImportanceClick(importance: Importance) {
-        currentItemInternal.value?.run {
+        currentItemInternal.value.run {
             copy(
                 importance = importance
             ).let {

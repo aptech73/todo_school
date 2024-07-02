@@ -2,26 +2,20 @@ package dev.aptech.todoapp.ui.screen.todoedit
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.google.android.material.datepicker.MaterialDatePicker
 import dev.aptech.todoapp.R
 import dev.aptech.todoapp.databinding.FragmentTodoeditBinding
-import dev.aptech.todoapp.domain.model.Importance
 import dev.aptech.todoapp.ui.screen.todoedit.validation.ValidationFailed
 import java.util.Date
 
 private const val TAG = "TodoEditFragment"
 
 class TodoEditFragment: Fragment(R.layout.fragment_todoedit) {
-
-    private val args: TodoEditFragmentArgs by navArgs()
 
     private lateinit var binding: FragmentTodoeditBinding
 
@@ -37,7 +31,7 @@ class TodoEditFragment: Fragment(R.layout.fragment_todoedit) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getItemById(args.todoId)
+        //viewModel.getItemById(args.todoId)
 
         setUI()
 
@@ -59,22 +53,8 @@ class TodoEditFragment: Fragment(R.layout.fragment_todoedit) {
                 findNavController().navigateUp()
             }
             deleteLayout.setOnClickListener {
-                if (args.todoId.isNotEmpty()) viewModel?.deleteTodo(args.todoId)
+                //if (args.todoId.isNotEmpty()) viewModel?.deleteTodo(args.todoId)
                 findNavController().navigateUp()
-            }
-            importanceLayout.setOnClickListener {
-                val popup = PopupMenu(requireContext(), it)
-                val inflater = popup.menuInflater
-                inflater.inflate(R.menu.popup_menu, popup.menu)
-                popup.show()
-                popup.setOnMenuItemClickListener { item: MenuItem? ->
-                    when (item!!.itemId) {
-                        R.id.high -> { viewModel?.onImportanceClick(Importance.HIGH) }
-                        R.id.low -> { viewModel?.onImportanceClick(Importance.LOW) }
-                        R.id.normal -> { viewModel?.onImportanceClick(Importance.NORMAL) }
-                    }
-                    return@setOnMenuItemClickListener true
-                }
             }
         }
     }
