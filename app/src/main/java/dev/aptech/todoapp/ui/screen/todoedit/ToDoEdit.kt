@@ -10,7 +10,7 @@ import dev.aptech.todoapp.ui.component.ToDoEditBar
 fun ToDoEdit(
     todoId: String,
     onBackPressed: () -> Unit,
-    modifier: Modifier
+    modifier: Modifier = Modifier
 ) {
 
     val editTodoEditViewModel = hiltViewModel<TodoEditViewModel>()
