@@ -14,10 +14,12 @@ navigationUiKtx = "2.7.7"
 
 hiltVersion = "2.50"
 
+
 androidx-compose-viewmodel = "2.8.2"
 androidx-compose-activity = "1.9.0"
 androidx-compose-navigation = "2.7.7"
 androidx-compose-material3 = "1.2.1"
+androidx-compose-hilt = "1.2.0"
 composeVersion = "1.6.8"
 
 [libraries]
@@ -33,6 +35,7 @@ androidx-compose-activity = { module = "androidx.activity:activity-compose", ver
 androidx-compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-compose-navigation" }
 androidx-compose-tooling = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "composeVersion" }
 androidx-compose-lifecycle = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-compose-viewmodel" }
+androidx-compose-hilt = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidx-compose-hilt" }
 
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }

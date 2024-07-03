@@ -5,4 +5,9 @@
     <string name="importance_normal">Нет</string>
     <string name="importance_low">Низкий</string>
     <string name="importance_high">Высокий</string>
+    <string name="save">Сохранить</string>
+    <string name="importance">Важность</string>
+    <string name="text_field_help">Что надо сделать …</string>
+    <string name="deadline_help">Сделать до</string>
+    <string name="delete">Удалить</string>
 </resources>

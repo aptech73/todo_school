@@ -42,9 +42,6 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
-        dataBinding = true
-
         compose = true
     }
     kapt {
@@ -66,6 +63,7 @@ dependencies {
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.compose.viewmodel)
     implementation(libs.androidx.compose.lifecycle)
+    implementation(libs.androidx.compose.hilt)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

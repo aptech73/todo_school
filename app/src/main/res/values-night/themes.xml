@@ -4,7 +4,7 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
         <item name="statusBarBackground">@color/back_primary</item>
-        <item name="colorPrimary">@color/color_green</item>
+        <item name="colorPrimary">@color/back_primary</item>
         <item name="colorSecondary">@color/back_secondary</item>
         <item name="colorOnSurfaceVariant">@color/support_separator</item>
     </style>

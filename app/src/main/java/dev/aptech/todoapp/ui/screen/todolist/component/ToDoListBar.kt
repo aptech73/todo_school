@@ -1,4 +1,4 @@
-package dev.aptech.todoapp.ui.component
+package dev.aptech.todoapp.ui.screen.todolist.component
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -17,7 +17,7 @@ import dev.aptech.todoapp.ui.apptheme.ToDoTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ToDoAppBar(
+fun ToDoListBar(
     scrollBehavior: TopAppBarScrollBehavior,
     onVisibleClick: () -> Unit,
     isVisibleAll: Boolean,
@@ -34,7 +34,7 @@ fun ToDoAppBar(
                 stringResource(R.string.toolbar_title),
                 overflow = TextOverflow.Ellipsis,
                 color = ToDoTheme.colors.labelPrimary,
-                style = ToDoTheme.typography.largeTitle
+                style = ToDoTheme.typography.title
 
             )
         },

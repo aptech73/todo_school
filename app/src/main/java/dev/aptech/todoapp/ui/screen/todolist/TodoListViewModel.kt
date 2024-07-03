@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.aptech.todoapp.domain.model.TodoItem
 import dev.aptech.todoapp.domain.model.TodoItemImpl
 import dev.aptech.todoapp.domain.repository.TodoItemsRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -29,7 +30,7 @@ class TodoListViewModel @Inject constructor(
     }
 
     private fun observeTodoList() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             todoItemsRepository.getTodoItems()
                 .catch {  }
                 .combine (visibility) { items, visibility ->
@@ -37,7 +38,7 @@ class TodoListViewModel @Inject constructor(
                 }
                 .collect {
                     if (it.second) itemsInternal.value = mapToItems(it.first)
-                    else itemsInternal.value = mapToItems(it.first).filter { !it.isFinished }
+                    else itemsInternal.value = mapToItems(it.first).filter { todo -> !todo.isFinished }
                 }
         }
     }
@@ -46,14 +47,8 @@ class TodoListViewModel @Inject constructor(
         visibilityInternal.value = visibilityInternal.value.not()
     }
 
-    fun removeTodo(id: String) {
-        viewModelScope.launch {
-            todoItemsRepository.deleteItemById(id)
-        }
-    }
-
     fun setFinishedTodo(id: String, isFinished: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             todoItemsRepository.updateFinished(id, isFinished)
         }
     }
