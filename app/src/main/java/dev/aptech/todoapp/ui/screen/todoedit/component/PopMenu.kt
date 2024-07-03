@@ -1,4 +1,4 @@
-package dev.aptech.todoapp.ui.component
+package dev.aptech.todoapp.ui.screen.todoedit.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -59,7 +59,8 @@ fun PopMenu(
                     Text(
                         text = stringResource(R.string.importance_low),
                         style = ToDoTheme.typography.body
-                    ) },
+                    )
+                },
                 onClick = { onMenuItemClick(Importance.LOW) },
                 colors = MenuDefaults.itemColors(
                     textColor = ToDoTheme.colors.labelPrimary,
@@ -81,7 +82,8 @@ fun PopMenu(
                     Text(
                         text = stringResource(R.string.importance_high),
                         style = ToDoTheme.typography.body
-                    ) },
+                    )
+                },
                 onClick = { onMenuItemClick(Importance.HIGH) },
                 colors = MenuDefaults.itemColors(
                     textColor = ToDoTheme.colors.colorRed,

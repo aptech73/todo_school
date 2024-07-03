@@ -1,4 +1,4 @@
-package dev.aptech.todoapp.ui.component
+package dev.aptech.todoapp.ui.screen.todoedit.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

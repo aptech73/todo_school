@@ -22,8 +22,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.aptech.todoapp.ui.apptheme.ToDoTheme
-import dev.aptech.todoapp.ui.component.ToDoListBar
-import dev.aptech.todoapp.ui.component.ToDoListItem
+import dev.aptech.todoapp.ui.screen.todolist.component.ToDoListBar
+import dev.aptech.todoapp.ui.screen.todolist.component.ToDoListItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

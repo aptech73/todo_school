@@ -1,4 +1,4 @@
-package dev.aptech.todoapp.ui.component
+package dev.aptech.todoapp.ui.screen.todolist.component
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon

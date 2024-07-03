@@ -1,7 +1,5 @@
 package dev.aptech.todoapp.ui.screen.todoedit
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,9 +11,10 @@ import dev.aptech.todoapp.ui.screen.todoedit.model.ItemTodo
 import dev.aptech.todoapp.ui.screen.todoedit.validation.Validation
 import dev.aptech.todoapp.ui.screen.todoedit.validation.ValidationEmpty
 import dev.aptech.todoapp.ui.screen.todoedit.validation.ValidationOk
-import dev.aptech.todoapp.util.SingleLiveEvent
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
@@ -26,16 +25,20 @@ class TodoEditViewModel @Inject constructor(
     private val todoItemsRepository: TodoItemsRepository
 ): ViewModel() {
 
-    private val currentItemInternal = MutableStateFlow<ItemTodo>(ItemTodo.default())
+    private val currentItemInternal = MutableStateFlow(ItemTodo.default())
     val currentItem = currentItemInternal.asStateFlow()
 
-    private val todoBodyValidationInternal = MutableLiveData<Validation>().apply { value = ValidationOk }
-    val todoBodyValidation: LiveData<Validation> = todoBodyValidationInternal
+    private val todoBodyValidationInternal = MutableStateFlow<Validation>(ValidationOk)
+    val todoBodyValidation = todoBodyValidationInternal.asStateFlow()
 
-    val onDeadLineCLick = SingleLiveEvent<Unit>()
+    private val datePickerVisibilityInternal = MutableStateFlow(false)
+    val datePickerVisibility = datePickerVisibilityInternal.asStateFlow()
+
+    private val menuVisibilityInternal = MutableStateFlow(false)
+    val menuVisibility = menuVisibilityInternal.asStateFlow()
 
     fun getItemById(id: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             when (val item = todoItemsRepository.getItemById(id)) {
                 is TodoItemEmpty -> {
                     currentItemInternal.value = ItemTodo.default()
@@ -51,7 +54,7 @@ class TodoEditViewModel @Inject constructor(
         val todoBody = currentItemInternal.value.body.trim()
 
         if (todoBody.isEmpty()) {
-            todoBodyValidationInternal.value = ValidationEmpty
+            todoBodyValidationInternal.update { ValidationEmpty }
             return
         }
 
@@ -67,13 +70,13 @@ class TodoEditViewModel @Inject constructor(
             )
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             todoItemsRepository.insertItem(todoItem)
         }
     }
 
     fun deleteTodo(id: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             todoItemsRepository.deleteItemById(id)
         }
     }
@@ -82,9 +85,11 @@ class TodoEditViewModel @Inject constructor(
         val curValue = currentItemInternal.value
         newValue.toString().also {
             currentItemInternal.apply {
-                todoBodyValidationInternal.value = when (it.isBlank()) {
-                    true -> ValidationEmpty
-                    else -> ValidationOk
+                todoBodyValidationInternal.update {_ ->
+                    when (it.isBlank()) {
+                        true -> ValidationEmpty
+                        else -> ValidationOk
+                    }
                 }
                 value.let { item ->
                     if (item.body != it) {
@@ -94,12 +99,19 @@ class TodoEditViewModel @Inject constructor(
             }
         }
     }
-
-    fun onDeadlineClick() {
-        onDeadLineCLick.postValue(Unit)
+    fun onImportanceClick(importance: Importance) {
+        menuVisibilityInternal.update { false }
+        currentItemInternal.value.run {
+            copy(
+                importance = importance
+            ).let {
+                currentItemInternal.value = it
+            }
+        }
     }
 
-    fun disableDeadline() {
+    fun onDeadlineSwitchClick(isChecked: Boolean) {
+        datePickerVisibilityInternal.update { isChecked }
         currentItemInternal.value.run {
             copy(
                 deadline = null
@@ -109,7 +121,12 @@ class TodoEditViewModel @Inject constructor(
         }
     }
 
-    fun enableDeadline(date: Date) {
+    fun onDatePickerDismiss() {
+        datePickerVisibilityInternal.update { false }
+    }
+
+    fun onDatePickerChange(date: Date) {
+        datePickerVisibilityInternal.update { false }
         currentItemInternal.value.run {
             copy(
                 deadline = date
@@ -119,14 +136,12 @@ class TodoEditViewModel @Inject constructor(
         }
     }
 
-    fun onImportanceClick(importance: Importance) {
-        currentItemInternal.value.run {
-            copy(
-                importance = importance
-            ).let {
-                currentItemInternal.value = it
-            }
-        }
+    fun onMenuDismiss() {
+        menuVisibilityInternal.update { false }
+    }
+
+    fun onMenuClick() {
+        menuVisibilityInternal.update { it.not() }
     }
 
     private fun TodoItemImpl.mapToView() = ItemTodo(

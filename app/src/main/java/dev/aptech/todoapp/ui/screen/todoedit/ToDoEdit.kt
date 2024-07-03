@@ -10,18 +10,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import dev.aptech.todoapp.ui.apptheme.ToDoTheme
-import dev.aptech.todoapp.ui.component.PopMenu
-import dev.aptech.todoapp.ui.component.ToDoDeadline
-import dev.aptech.todoapp.ui.component.ToDoDelete
-import dev.aptech.todoapp.ui.component.ToDoEditBar
-import dev.aptech.todoapp.ui.component.ToDoEditText
+import dev.aptech.todoapp.ui.screen.todoedit.component.PopMenu
+import dev.aptech.todoapp.ui.screen.todoedit.component.ToDoDate
+import dev.aptech.todoapp.ui.screen.todoedit.component.ToDoDeadline
+import dev.aptech.todoapp.ui.screen.todoedit.component.ToDoDelete
+import dev.aptech.todoapp.ui.screen.todoedit.component.ToDoEditBar
+import dev.aptech.todoapp.ui.screen.todoedit.component.ToDoEditText
+import java.util.Calendar
 
 @Composable
 fun ToDoEdit(
@@ -34,18 +33,28 @@ fun ToDoEdit(
 
     val todoItem by editTodoEditViewModel.currentItem.collectAsState()
 
-    var menuVisibility by remember { mutableStateOf(false) }
+    val datePickerVisibility by editTodoEditViewModel.datePickerVisibility.collectAsState()
+
+    val menuVisibility by editTodoEditViewModel.menuVisibility.collectAsState()
+
+    val validation by editTodoEditViewModel.todoBodyValidation.collectAsState()
 
     LaunchedEffect(Unit) {
         editTodoEditViewModel.getItemById(todoId)
     }
 
     Scaffold(
-        topBar = { ToDoEditBar(
-            onCancelClick = { onBackPressed() },
-            onSaveClick = {  },
-            modifier = modifier
-        ) },
+        topBar = {
+            ToDoEditBar(
+                todoId = todoId,
+                onCancelClick = { onBackPressed() },
+                onSaveClick = {
+                    editTodoEditViewModel.saveTodo()
+                    onBackPressed()
+                },
+                modifier = modifier
+            )
+        },
         containerColor = ToDoTheme.colors.backPrimary
     ) { paddingValues ->
         Column(
@@ -57,19 +66,35 @@ fun ToDoEdit(
                 text = todoItem.body,
                 onValueChanged = {
                     editTodoEditViewModel.onTodoBodyChanged(it)
-                })
+                },
+                validation = validation
+            )
             Spacer(modifier = modifier.height(ToDoTheme.shape.paddingSmall))
             PopMenu(
                 importance = todoItem.importance,
                 menuVisibility = menuVisibility,
-                onMenuClick = { menuVisibility = menuVisibility.not() },
-                onDismissRequest = { menuVisibility = menuVisibility.not() },
+                onMenuClick = { editTodoEditViewModel.onMenuClick() },
+                onDismissRequest = { editTodoEditViewModel.onMenuDismiss() },
                 onMenuItemClick = { editTodoEditViewModel.onImportanceClick(it) },
             )
             HorizontalDivider(thickness = 0.5.dp, color = ToDoTheme.colors.supportSeparator)
-            ToDoDeadline(deadline = todoItem.deadline, onSwitchClick = { editTodoEditViewModel.onDeadlineClick() })
+            ToDoDate(
+                currentDate = Calendar.getInstance(),
+                visibility = datePickerVisibility,
+                onPositiveClick = { editTodoEditViewModel.onDatePickerChange(it) },
+                onNegativeClick = { editTodoEditViewModel.onDatePickerDismiss() }
+            )
+            ToDoDeadline(
+                deadline = todoItem.deadline,
+                onSwitchClick = { editTodoEditViewModel.onDeadlineSwitchClick(it) }
+            )
             HorizontalDivider(thickness = 0.5.dp, color = ToDoTheme.colors.supportSeparator)
-            ToDoDelete(onDeleteClick = { editTodoEditViewModel.deleteTodo(todoId) })
+            ToDoDelete(
+                onDeleteClick = {
+                    editTodoEditViewModel.deleteTodo(todoId)
+                    onBackPressed()
+                }
+            )
         }
     }
 }

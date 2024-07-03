@@ -1,4 +1,4 @@
-package dev.aptech.todoapp.ui.component
+package dev.aptech.todoapp.ui.screen.todolist.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

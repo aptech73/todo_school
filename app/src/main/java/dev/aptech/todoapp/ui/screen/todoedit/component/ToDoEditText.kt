@@ -1,4 +1,4 @@
-package dev.aptech.todoapp.ui.component
+package dev.aptech.todoapp.ui.screen.todoedit.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,11 +14,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import dev.aptech.todoapp.R
 import dev.aptech.todoapp.ui.apptheme.ToDoTheme
+import dev.aptech.todoapp.ui.screen.todoedit.validation.Validation
+import dev.aptech.todoapp.ui.screen.todoedit.validation.ValidationEmpty
 
 @Composable
 fun ToDoEditText(
     text: String,
     onValueChanged: (String) -> Unit,
+    validation: Validation,
     modifier: Modifier = Modifier
 ) {
     ElevatedCard(
@@ -50,9 +53,12 @@ fun ToDoEditText(
                 unfocusedContainerColor = Color.Transparent,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                cursorColor = ToDoTheme.colors.colorBlue
+                cursorColor = ToDoTheme.colors.colorBlue,
+                focusedTextColor = ToDoTheme.colors.labelPrimary,
+                unfocusedTextColor = ToDoTheme.colors.labelPrimary
             ),
-            modifier = modifier.fillMaxWidth()
+            modifier = modifier.fillMaxWidth(),
+            isError = validation is ValidationEmpty,
         )
     }
 }
